@@ -17,13 +17,11 @@
 
 package org.apache.shardingsphere.example.core.jpa.service;
 
-import org.apache.shardingsphere.example.core.api.repository.AddressRepository;
-import org.apache.shardingsphere.example.core.api.repository.OrderItemRepository;
-import org.apache.shardingsphere.example.core.api.repository.OrderRepository;
+import org.apache.shardingsphere.example.core.api.entity.Item;
+import org.apache.shardingsphere.example.core.api.entity.ItemDetail;
+import org.apache.shardingsphere.example.core.api.repository.*;
 import org.apache.shardingsphere.example.core.api.service.ExampleService;
-import org.apache.shardingsphere.example.core.jpa.entity.AddressEntity;
-import org.apache.shardingsphere.example.core.jpa.entity.OrderEntity;
-import org.apache.shardingsphere.example.core.jpa.entity.OrderItemEntity;
+import org.apache.shardingsphere.example.core.jpa.entity.*;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +40,14 @@ public class OrderServiceImpl implements ExampleService {
     
     @Resource
     private OrderItemRepository orderItemRepository;
+
+
+    @Resource
+    private ItemRepository itemRepository;
+
+    @Resource
+    private ItemDetailRepository itemDetailRepository;
+
     
     @Resource
     private AddressRepository addressRepository;
@@ -52,7 +58,7 @@ public class OrderServiceImpl implements ExampleService {
             AddressEntity entity = new AddressEntity();
             entity.setAddressId((long) i);
             entity.setAddressName("address_" + String.valueOf(i));
-            addressRepository.insert(entity);
+//            addressRepository.insert(entity);
         }
     }
     
@@ -66,7 +72,7 @@ public class OrderServiceImpl implements ExampleService {
         System.out.println("-------------- Process Success Begin ---------------");
         List<Long> orderIds = insertData();
         printData();
-        deleteData(orderIds);
+//        deleteData(orderIds);
         printData();
         System.out.println("-------------- Process Success Finish --------------");
     }
@@ -83,7 +89,7 @@ public class OrderServiceImpl implements ExampleService {
     private List<Long> insertData() throws SQLException {
         System.out.println("---------------------------- Insert Data ----------------------------");
         List<Long> result = new ArrayList<>(10);
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 100; i++) {
             OrderEntity order = new OrderEntity();
             order.setUserId(i);
             order.setAddressId(i);
@@ -95,6 +101,21 @@ public class OrderServiceImpl implements ExampleService {
             item.setStatus("INSERT_TEST_JPA");
             orderItemRepository.insert(item);
             result.add(order.getOrderId());
+
+
+            ItemEntity item1 = new ItemEntity();
+//            item1.setItemId(i+0L);
+            item1.setStatus("s");
+            item1.setName(i+"_name");
+
+            itemRepository.insert(item1);
+
+            ItemDetailEntity detail = new ItemDetailEntity();
+//            detail.setItemDetailId(i+0L);
+            detail.setItemId(item1.getItemId());
+            detail.setCode("code"+i);
+            itemDetailRepository.insert(detail);
+
         }
         return result;
     }
