@@ -119,3 +119,4 @@ We will add APM example recently.
 We prefer to add a docker base example recently.
 
 ### [how to use docker to config sharding-jdbc & sharding-proxy](./docker/docker-compose.md) (Optional)
+# sharding-jdbc-example-test
